@@ -1,12 +1,36 @@
 import { useEffect, useRef, useState } from "react";
-import PlayIcon from "../../assets/icons/play.svg?react";
-import PauseIcon from "../../assets/icons/pause.svg?react";
 import type { AudioContent } from "../../../pages/AudioVisualizer";
+import Controller from "./Controller";
 
 interface ISpectogramProps {
   file?: File | null;
   fileContent?: AudioContent | null;
 }
+
+export type Theme =
+  | "fire-style"
+  | "cool-night"
+  | "monochrome"
+  | "reverse-heatmap"
+  | "heatmap"
+  | "bright-daylight"
+  | "zoro";
+
+export const SpectogramThemes: {
+  id: Theme;
+  name: string;
+  hue: number;
+  saturation: number;
+  lightness: number;
+}[] = [
+  {
+    id: "cool-night",
+    name: "Cool Night",
+    hue: 0,
+    lightness: 0,
+    saturation: 100,
+  },
+];
 
 const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
@@ -174,15 +198,11 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
       <h1 className="text-xl font-bold mb-2">Spectrogram Viewer</h1>
       <audio ref={audioRef} className="hidden" />
 
-      <div className="border-1 border-gray-300 rounded-md flex flex-row gap-[1rem] items-center self-start px-4 py-2">
-        <button
-          onClick={togglePlay}
-          className="border-1 border-gray-300 rounded-md px-[10px] py-[8px] hover:bg-gray-300 cursor-pointer"
-        >
-          {!isPlaying ? <PlayIcon /> : <PauseIcon />}
-        </button>
-        {fileName && <p>Playing: {fileName}</p>}
-      </div>
+      <Controller
+        togglePlay={togglePlay}
+        fileName={fileName}
+        isPlaying={isPlaying}
+      />
 
       <canvas
         ref={canvasRef}
