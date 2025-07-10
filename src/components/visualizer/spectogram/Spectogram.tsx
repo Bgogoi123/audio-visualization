@@ -1,4 +1,4 @@
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AudioContent } from "../../../pages/AudioVisualizer";
 import Controller from "./Controller";
 
