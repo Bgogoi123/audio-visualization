@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import type { AudioContent } from "../../../pages/AudioVisualizer";
 import Controller from "./Controller";
 
 interface ISpectogramProps {
   file?: File | null;
   fileContent?: AudioContent | null;
+  isReset?: boolean;
 }
 
 export type Theme =
@@ -16,49 +17,99 @@ export type Theme =
   | "bright-daylight"
   | "zoro";
 
-export const SpectogramThemes: {
+export type ThemeConfig = {
   id: Theme;
   name: string;
-  hue: number;
-  saturation: number;
-  lightness: number;
-}[] = [
+  calc: (percent: number) => {
+    hue: number;
+    saturation: number;
+    lightness: number;
+  };
+};
+
+export const SPECTOGRAM_THEMES: ThemeConfig[] = [
   {
     id: "cool-night",
     name: "Cool Night",
-    hue: 0,
-    lightness: 0,
-    saturation: 100,
+    calc: (percent: number) => ({
+      hue: 260 + percent * 20,
+      saturation: 100,
+      lightness: 20 + percent * 100,
+    }),
+  },
+  {
+    id: "monochrome",
+    name: "Monochrome",
+    calc: (percent: number) => ({
+      hue: 0,
+      saturation: 0,
+      lightness: percent * 100,
+    }),
+  },
+  {
+    id: "fire-style",
+    name: "Fire Style",
+    calc: (percent: number) => ({
+      hue: Math.round((1 - percent) * 60),
+      saturation: 100,
+      lightness: 30 + percent * 40,
+    }),
+  },
+  {
+    id: "bright-daylight",
+    name: "Bright Day Light",
+    calc: (percent: number) => ({
+      hue: percent * 50,
+      saturation: 100,
+      lightness: 60,
+    }),
+  },
+  {
+    id: "heatmap",
+    name: "HeatMap",
+    calc: (percent: number) => ({
+      hue: Math.round((1 - percent) * 240),
+      saturation: 100,
+      lightness: 50,
+    }),
+  },
+  {
+    id: "zoro",
+    name: "Roronoa Zoro",
+    calc: (percent: number) => {
+      // Map low percent (quiet) to dark green → high percent (loud) to bright lime
+      const hue = 120 - percent * 40; // 120 = green, towards 80 = lime-green
+      const saturation = 100;
+      const lightness = 10 + percent * 40; // darker for quiet, brighter for loud
+      return { hue, saturation, lightness };
+    },
   },
 ];
 
-const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
+const Spectrogram = ({
+  file,
+  fileContent,
+  isReset = false,
+}: ISpectogramProps) => {
   const [analyzer, setAnalyzer] = useState<AnalyserNode | null>(null);
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
   const [audioSourceNode, setAudioSourceNode] =
     useState<MediaElementAudioSourceNode | null>(null);
+  const [internalAudioRef, setInternalAudioRef] =
+    useState<HTMLAudioElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [theme, setTheme] = useState<Theme>("heatmap");
 
   const animationFrameRef = useRef<number>(0);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   async function analyzeAudioFile({ file, fileContent }: ISpectogramProps) {
-    if (file) {
-      setFileName(file.name);
-      if (audioRef.current) {
-        audioRef.current.src = URL.createObjectURL(file);
-        audioRef.current.load();
-      }
-    } else if (fileContent) {
-      setFileName(fileContent.name ?? "");
-      if (audioRef.current) {
-        console.log("Audioref src loaded: ", fileContent.url);
-        audioRef.current.src = fileContent.url;
-        audioRef.current.load();
-      }
-    } else return;
+    const audioElem = new Audio();
+    audioElem.src = file ? URL.createObjectURL(file) : fileContent?.url ?? "";
+    audioElem.load();
+    setInternalAudioRef(audioElem);
+    setFileName(file ? file.name : fileContent?.name ?? "Audio File");
 
     if (audioContext) {
       await audioContext.close(); // avoid multiple contexts
@@ -70,8 +121,7 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
 
     audioSourceNode?.disconnect();
 
-    if (!audioRef.current) return;
-    const sourceNode = context.createMediaElementSource(audioRef.current);
+    const sourceNode = context.createMediaElementSource(audioElem);
     sourceNode.connect(analyzerNode);
     analyzerNode.connect(context.destination);
 
@@ -90,7 +140,6 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
     const dataArray = new Uint8Array(bufferLength);
     const width = canvas.width;
     const height = canvas.height;
-    // ctx.clearRect(0, 0, width, height);
 
     const sliceWidth = 1;
 
@@ -114,36 +163,21 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
         const percent = value / 255;
         const barY = (y / bufferLength) * height;
         const barHeight = height / bufferLength;
-
-        // -- cool night theme --
-        const hue = 260 + percent * 20; // 260 = indigo, 280 = violet
-        const lightness = 20 + percent * 100;
-        // ctx.fillStyle = `hsl(${hue}, 100%, ${20 + percent * 40}%)`;
-
-        // -- monochorme theme --
-        // const gray = percent * 100;
-        // ctx.fillStyle = `hsl(0, 0%, ${gray}%)`; // same for all hues, no color
-
-        // -- fire-style ace theme --
-        // const hue = Math.round((1 - percent) * 60); // 60deg = yellow
-        // const lightness = 30 + percent * 40;
-
-        // -- bright daylight theme --
-        // const hue = percent * 50;
-        // const lightness = 60;
-
-        // const baseHue = 260;
-        // const hue = baseHue + percent * 20;
-        // const lightness = 20 + percent * 40;
-
         const alpha = percent < 0.02 ? 0 : 1; // make almost-silent bins transparent
-        analyser.smoothingTimeConstant = 0.8;
 
-        ctx.fillStyle = `hsla(${hue}, 100%, ${lightness}%, ${alpha})`;
-
+        // theme - selection
+        const selectedTheme = SPECTOGRAM_THEMES.find((th) => th.id === theme);
+        if (selectedTheme !== undefined) {
+          const { hue, saturation, lightness } = selectedTheme.calc(percent);
+          // use these values in hsla:
+          ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+        } else {
+          // use a default theme (say heatmap).
+          const hue = Math.round((1 - percent) * 240);
+          ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
+        }
         ctx.fillRect(width - sliceWidth, height - barY, sliceWidth, barHeight);
       }
-
       animationFrameRef.current = requestAnimationFrame(draw);
     };
 
@@ -151,27 +185,39 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
   };
 
   function togglePlay() {
-    if (!audioRef.current) return;
-
-    if (isPlaying) audioRef.current.pause();
-    else audioRef.current.play();
-
+    if (isPlaying) internalAudioRef?.pause();
+    else internalAudioRef?.play();
     setIsPlaying((prev) => !prev);
   }
 
+  function clearCanvas() {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
   useEffect(() => {
-    if (audioRef.current === null) return;
-
-    function handleAudioEnded() {
+    if (isReset) {
+      setAnalyzer(null);
+      setAudioContext(null);
+      setAudioSourceNode(null);
+      setInternalAudioRef(null);
+      setFileName("");
       setIsPlaying(false);
+      animationFrameRef.current = 0;
+      clearCanvas();
     }
+  }, [isReset]);
 
-    audioRef.current.addEventListener("ended", handleAudioEnded);
-
+  useEffect(() => {
+    const handleAudioEnded = () => setIsPlaying(false);
+    internalAudioRef?.addEventListener("ended", handleAudioEnded);
     return () => {
-      audioRef.current?.removeEventListener("ended", handleAudioEnded);
+      internalAudioRef?.removeEventListener("ended", handleAudioEnded);
     };
-  }, []);
+  }, [internalAudioRef]);
 
   useEffect(() => {
     if (!file && !fileContent) return;
@@ -180,11 +226,10 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
 
   useEffect(() => {
     if (analyzer && isPlaying) drawSpectrogram(analyzer);
-
     return () => {
       cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [analyzer, isPlaying]);
+  }, [analyzer, isPlaying, theme]);
 
   useEffect(() => {
     return () => {
@@ -196,12 +241,12 @@ const Spectrogram = ({ file, fileContent }: ISpectogramProps) => {
   return (
     <div className="p-4 flex flex-col">
       <h1 className="text-xl font-bold mb-2">Spectrogram Viewer</h1>
-      <audio ref={audioRef} className="hidden" />
 
       <Controller
         togglePlay={togglePlay}
         fileName={fileName}
         isPlaying={isPlaying}
+        onThemeChange={(value) => setTheme(value)}
       />
 
       <canvas
