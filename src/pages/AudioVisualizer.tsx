@@ -12,7 +12,7 @@ import WhaleAmbient from "../assets/audio/whale-sounds-ambient-116194.mp3";
 
 const AUDIO_URL: { id: number; name: string; url: string }[] = [
   { id: 1, name: "Drips from Melting Ice in a Glacial Cave", url: SFXDripsUrl },
-  { id: 2, name: "Police Siren Two", url: PoliceSiren },
+  { id: 2, name: "Police Siren", url: PoliceSiren },
   { id: 3, name: "Flute", url: Flute },
   { id: 4, name: "Birds and Nature", url: BirdsAndNature },
   { id: 5, name: "Ocean Waves", url: OceanWaves },
@@ -46,7 +46,16 @@ const AudioVisualizer = () => {
   function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
     if (value === "device") handleSelectFromDevice();
-    else setAudioContent({ name: value, url: value });
+    else {
+      const id = !isNaN(Number(value)) ? Number(value) : 0;
+      const content = AUDIO_URL.find((aud) => aud.id === id);
+      if (content) setAudioContent({ name: content?.name, url: content?.url });
+    }
+  }
+
+  function handleResetSpectogram() {
+    setAudioContent(null);
+    setAudioFile(null);
   }
 
   return (
@@ -60,7 +69,7 @@ const AudioVisualizer = () => {
             Select an audio
           </option>
           {AUDIO_URL.map((url, i) => (
-            <option key={i} value={url.url}>
+            <option key={i} value={url.id}>
               {url.name}
             </option>
           ))}
@@ -74,11 +83,15 @@ const AudioVisualizer = () => {
           onChange={handleChange}
           className="hidden border-1 border-[#ccc] rounded-xl p-2 cursor-pointer hover:bg-blue-200"
         />
+
+        <button className="border-1 border-[#ccc] rounded-md p-[0.5rem] cursor-pointer hover:bg-blue-200"
+        onClick={handleResetSpectogram}
+        >
+          Reset
+        </button>
       </div>
 
-      {(audioFile !== null || audioContent !== null) && (
-        <Spectogram file={audioFile} fileContent={audioContent} />
-      )}
+      <Spectogram file={audioFile} fileContent={audioContent} />
     </div>
   );
 };
