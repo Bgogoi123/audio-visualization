@@ -17,8 +17,6 @@ const BasicVisualizer = ({
   isDownloaded = true,
   isUploaded = true,
   loading,
-  onDownload,
-  onUpload,
   variant = "primary",
 }: IProps) => {
   const [currentTime, setCurrentTime] = useState(0);
@@ -181,17 +179,17 @@ const BasicVisualizer = ({
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  function handleDownloadAudio(
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    onDownload?.();
-  }
+  // function handleDownloadAudio(
+  //   _: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  // ) {
+  //   onDownload?.();
+  // }
 
-  function handleUploadAudio(
-    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    onUpload?.();
-  }
+  // function handleUploadAudio(
+  //   _: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  // ) {
+  //   onUpload?.();
+  // }
 
   useEffect(() => {
     generateFileUrl();
