@@ -3,3 +3,16 @@
 * {
   box-sizing: border-box;
 }
+
+@theme {
+  /* primary colors */
+  --color-primary: #846358;
+  --color-primary-400: #a18072;
+  --color-primary-300: #d2bab0;
+  --color-primary-200: #eaddd7;
+  --color-primary-100: #f8f1ee;
+  --color-primary-500: #846358;
+
+  --color-light: #fff8e8;
+  --color-dark: #6c584c;
+}
