@@ -9,13 +9,13 @@ interface ISpectogramProps {
 }
 
 export type Theme =
-  | "fire-style"
   | "cool-night"
   | "monochrome"
   | "reverse-heatmap"
   | "heatmap"
   | "bright-daylight"
-  | "zoro";
+  | "zoro"
+  | "nezuko";
 
 export type ThemeConfig = {
   id: Theme;
@@ -32,27 +32,27 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     id: "cool-night",
     name: "Cool Night",
     calc: (percent: number) => ({
-      hue: 260 + percent * 20,
+      hue: 260 + percent * 0,
       saturation: 100,
-      lightness: 20 + percent * 100,
+      lightness: 20 + percent * 50,
+    }),
+  },
+  {
+    id: "nezuko",
+    name: "Nezuko's Fire",
+    calc: (percent: number) => ({
+      hue: 260 + percent * 120,
+      saturation: 100,
+      lightness: 20 + percent * 50,
     }),
   },
   {
     id: "monochrome",
     name: "Monochrome",
     calc: (percent: number) => ({
-      hue: 0,
+      hue: percent * 20,
       saturation: 0,
       lightness: percent * 100,
-    }),
-  },
-  {
-    id: "fire-style",
-    name: "Fire Style",
-    calc: (percent: number) => ({
-      hue: Math.round((1 - percent) * 60),
-      saturation: 100,
-      lightness: 30 + percent * 40,
     }),
   },
   {
@@ -77,7 +77,6 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     id: "zoro",
     name: "Roronoa Zoro",
     calc: (percent: number) => {
-      // Map low percent (quiet) to dark green → high percent (loud) to bright lime
       const hue = 120 - percent * 40; // 120 = green, towards 80 = lime-green
       const saturation = 100;
       const lightness = 10 + percent * 40; // darker for quiet, brighter for loud

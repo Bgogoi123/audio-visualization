@@ -5,20 +5,16 @@ import SFXDripsUrl from "../assets/audio/sfx-drips-from-ice-melt-in-a-glacial-ca
 import PoliceSiren from "../assets/audio/police-siren-sound-effect-240674.mp3";
 import Flute from "../assets/audio/krishna-flute-2669.mp3";
 import BirdsAndNature from "../assets/audio/rainy-day-in-town-with-birds-singing-194011.mp3";
-import OceanWaves from "../assets/audio/ocean-beach-waves-332383.mp3";
 import AnthemOfVictory from "../assets/audio/anthem-of-victory-111206.mp3";
 import LazyDay from "../assets/audio/lazy-day-stylish-futuristic-chill-239287.mp3";
-import WhaleAmbient from "../assets/audio/whale-sounds-ambient-116194.mp3";
 
 const AUDIO_URL: { id: number; name: string; url: string }[] = [
-  { id: 1, name: "Drips from Melting Ice in a Glacial Cave", url: SFXDripsUrl },
-  { id: 2, name: "Police Siren", url: PoliceSiren },
-  { id: 3, name: "Flute", url: Flute },
-  { id: 4, name: "Birds and Nature", url: BirdsAndNature },
-  { id: 5, name: "Ocean Waves", url: OceanWaves },
-  { id: 6, name: "Anthem of Victory", url: AnthemOfVictory },
-  { id: 7, name: "A Lazy Day", url: LazyDay },
-  { id: 8, name: "Ambient Whale Sound", url: WhaleAmbient },
+  { id: 1, name: "A Lazy Day", url: LazyDay },
+  { id: 2, name: "Anthem of Victory", url: AnthemOfVictory },
+  { id: 3, name: "Birds and Nature", url: BirdsAndNature },
+  { id: 4, name: "Drips from Melting Ice in a Glacial Cave", url: SFXDripsUrl },
+  { id: 5, name: "Flute", url: Flute },
+  { id: 6, name: "Police Siren", url: PoliceSiren },
 ];
 
 export type AudioContent = { url: string; name: string };
@@ -84,8 +80,9 @@ const AudioVisualizer = () => {
           className="hidden border-1 border-[#ccc] rounded-xl p-2 cursor-pointer hover:bg-blue-200"
         />
 
-        <button className="border-1 border-[#ccc] rounded-md p-[0.5rem] cursor-pointer hover:bg-blue-200"
-        onClick={handleResetSpectogram}
+        <button
+          className="border-1 border-[#ccc] rounded-md p-[0.5rem] cursor-pointer hover:bg-blue-200"
+          onClick={handleResetSpectogram}
         >
           Reset
         </button>
