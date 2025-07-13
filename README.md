@@ -2,7 +2,11 @@
 
 **Spectranaut** is an interactive audio visualization tool that transforms any audio file into a live spectrogram. With customizable color themes and support for local file uploads, Spectranaut brings sound to life—visually.
 
-## 🚀 Features
+## What is a Spectogram?
+
+A **Spectrogram** is a visual representation of the frequencies present in a sound over time. It displays frequency on the vertical axis, time on the horizontal axis, and the intensity (amplitude) of each frequency is represented by color or brightness.
+
+## 🚀 Spectranaut Features
 
 - 🔊 Upload or select built-in audio files to visualize.
 - 🎨 Choose from a variety of dynamic color themes.
@@ -11,9 +15,9 @@
 - 🖱️ Click-to-play/pause interface.
 - 🌈 HSLA-based theming for smooth visual gradients.
 
-## 📷 Preview
+## 🚀 Live Demo
 
-![Spectrogram Demo](./preview.png)
+[Check out the live version of Spectranaut here.](https://spectronaut.netlify.app/)
 
 ## 🛠 Tech Stack
 
@@ -25,14 +29,35 @@
 ## 📝 How to Use
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Bgogoi123/audio-visualization.git
+
+   ```
+
+2. Install dependencies:
+
+```bash
    cd audio-visualizer
    npm i
-   npm run dev
+```
 
-2. Run the Development Server:
-  - Open your browser and go to http://localhost:5173
+3. Run the Development Server:
+
+```bash
+npm run dev
+```
+
+- Open your browser and go to http://localhost:5173
 
 ## 🤖 Inspiration
-Inspired by the mesmerizing visuals of music and anime aesthetics, Spectranaut was created to explore the intersection of sound and sight in an engaging way.
+
+**Spectrograms** turn sound into stunning, flowing visuals — a concept that instantly captivated me. The way frequencies transform into waves of color sparked my curiosity and inspired me to build **Spectranaut**: a tool to explore and appreciate the beauty of sound in motion.
+
+## 📚 References
+
+- [MDN Web Docs: Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [Spectrogram – Wikipedia](https://en.wikipedia.org/wiki/Spectrogram)
+- [Understanding HSLA Colors](https://colortutorial.design/hsb.html)
+- [Visualizing Audio as a Waveform in React - Article](https://dev.to/ssk14/visualizing-audio-as-a-waveform-in-react-o67)
+- [Spectogram Playground](https://musiclab.chromeexperiments.com/spectrogram/)
