@@ -24,6 +24,7 @@ export type AudioContent = { url: string; name: string };
 const AudioVisualizer = () => {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [audioContent, setAudioContent] = useState<AudioContent | null>(null);
+  const [isSpectanautReset, setIsSpectanautReset] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
@@ -50,10 +51,10 @@ const AudioVisualizer = () => {
   function handleResetSpectogram() {
     setAudioContent(null);
     setAudioFile(null);
+    setIsSpectanautReset(true);
   }
 
   return (
-    <div className="flex flex-col gap-0">
       <div className="h-[100vh] flex flex-col gap-[1rem] items-center py-[1rem] px-[3rem] bg-primary-100">
         <SourceController
           fileOptions={AUDIO_URL}
@@ -63,9 +64,12 @@ const AudioVisualizer = () => {
           onReset={handleResetSpectogram}
         />
 
-        <Spectogram file={audioFile} fileContent={audioContent} />
+        <Spectogram
+          file={audioFile}
+          fileContent={audioContent}
+          isReset={isSpectanautReset}
+        />
       </div>
-    </div>
   );
 };
 

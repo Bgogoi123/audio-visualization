@@ -18,17 +18,23 @@ const SourceController = ({
   onReset,
 }: IControllerProps) => {
   const [isSelectable, setIsSelectable] = useState(true);
+  const [selectValue, setSelectValue] = useState(-1);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
+
     if (value === "device") {
       if (inputRef.current === null) return;
       inputRef.current.classList.remove("hidden");
       onSelectFromDevice?.();
       setIsSelectable(false);
-    } else onSelectAudio?.(e);
+      setSelectValue(-1);
+    } else {
+      setSelectValue(Number(value));
+      onSelectAudio?.(e);
+    }
   }
 
   function handleReset() {
@@ -40,6 +46,7 @@ const SourceController = ({
   return (
     <div className="min-h-[70px] w-full rounded-md flex flex-row flex-wrap items-center gap-[1rem] bg-light p-[1rem]">
       <select
+        value={selectValue}
         onChange={handleSelect}
         disabled={!isSelectable}
         className={`min-w-1/3 border-1 border-[#ccc] rounded-md p-2 bg-primary-100 ${
@@ -48,7 +55,7 @@ const SourceController = ({
             : "cursor-default"
         }`}
       >
-        <option selected disabled>
+        <option value={-1} disabled>
           Select an audio
         </option>
         {fileOptions?.map((url, i) => (

@@ -5,9 +5,8 @@ export interface IFooterProps {
 const Footer = ({ variant = "contained" }: IFooterProps) => {
   return (
     <footer
-      className={`flex flex-row justify-between items-center ${
-        variant === "contained" ? "bg-primary-200" : "bg-white"
-      }  text-dark px-[2rem] py-[1rem] flex-wrap`}
+      className={`flex flex-row flex-wrap justify-between items-center text-dark px-[2rem] py-[1rem] 
+        ${variant === "contained" ? "bg-primary-200" : "bg-white"}`}
     >
       <p className="text-[14px] text-dark">
         Spectranaut by{" "}

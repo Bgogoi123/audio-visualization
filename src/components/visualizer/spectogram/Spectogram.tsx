@@ -10,13 +10,11 @@ interface ISpectogramProps {
 
 export type Theme =
   | "cool-night"
-  | "monochrome"
-  | "reverse-heatmap"
+  | "cosmic-void"
   | "heatmap"
-  | "bright-daylight"
-  | "zoro"
+  | "monochrome"
   | "nezuko"
-  | "cosmic-void";
+  | "zoro";
 
 export type ThemeConfig = {
   id: Theme;
@@ -39,12 +37,22 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     }),
   },
   {
-    id: "nezuko",
-    name: "Nezuko's Fire",
+    id: "cosmic-void",
+    name: "Cosmic Void",
+    calc: (percent: number) => {
+      const hue = 240 - percent * 240;
+      const saturation = 100;
+      const lightness = 5 + percent * 60;
+      return { hue, saturation, lightness };
+    },
+  },
+  {
+    id: "heatmap",
+    name: "Heat Map",
     calc: (percent: number) => ({
-      hue: 260 + percent * 120,
+      hue: Math.round((1 - percent) * 240),
       saturation: 100,
-      lightness: 20 + percent * 50,
+      lightness: 50,
     }),
   },
   {
@@ -57,21 +65,12 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     }),
   },
   {
-    id: "bright-daylight",
-    name: "Bright Day Light",
+    id: "nezuko",
+    name: "Nezuko's Fire",
     calc: (percent: number) => ({
-      hue: percent * 50,
+      hue: 260 + percent * 120,
       saturation: 100,
-      lightness: 60,
-    }),
-  },
-  {
-    id: "heatmap",
-    name: "Heat Map",
-    calc: (percent: number) => ({
-      hue: Math.round((1 - percent) * 240),
-      saturation: 100,
-      lightness: 50,
+      lightness: 20 + percent * 50,
     }),
   },
   {
@@ -81,16 +80,6 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
       const hue = 120 - percent * 40;
       const saturation = 100;
       const lightness = 10 + percent * 40;
-      return { hue, saturation, lightness };
-    },
-  },
-  {
-    id: "cosmic-void",
-    name: "Cosmic Void",
-    calc: (percent: number) => {
-      const hue = 240 - percent * 240;
-      const saturation = 100;
-      const lightness = 5 + percent * 60;
       return { hue, saturation, lightness };
     },
   },
@@ -200,6 +189,38 @@ const Spectrogram = ({
     setIsPlaying((prev) => !prev);
   }
 
+  function reset() {
+    try {
+      // Stop playback
+      internalAudioRef?.pause();
+      internalAudioRef?.removeAttribute("src");
+      internalAudioRef?.load();
+
+      // Disconnect audio nodes
+      if (audioSourceNode) audioSourceNode?.disconnect();
+      if (audioContext) audioContext?.close();
+
+      // Cancel animation
+      cancelAnimationFrame(animationFrameRef.current);
+
+      // Clear canvas
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d", { willReadFrequently: true });
+      if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Reset state
+      setAnalyzer(null);
+      setAudioContext(null);
+      setAudioSourceNode(null);
+      setInternalAudioRef(null);
+      setFileName("");
+      setIsPlaying(false);
+      setTheme("heatmap");
+    } catch (err) {
+      console.error("Error while reseting spectogram: ", err);
+    }
+  }
+
   useEffect(() => {
     const handleAudioEnded = () => setIsPlaying(false);
     internalAudioRef?.addEventListener("ended", handleAudioEnded);
@@ -222,10 +243,14 @@ const Spectrogram = ({
 
   useEffect(() => {
     return () => {
-      audioContext?.close();
-      audioSourceNode?.disconnect();
+      if (audioContext) audioContext?.close();
+      if (audioSourceNode) audioSourceNode?.disconnect();
     };
   }, [audioContext, audioSourceNode]);
+
+  useEffect(() => {
+    reset();
+  }, [isReset]);
 
   return (
     <div className="w-full flex flex-col gap-[1rem]">
@@ -243,7 +268,7 @@ const Spectrogram = ({
         ref={canvasRef}
         width="1000"
         height="400"
-        className="mt-4 rounded-md border bg-canvas"
+        className="rounded-md border bg-canvas"
         onClick={togglePlay}
       />
     </div>
