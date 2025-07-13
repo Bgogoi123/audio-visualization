@@ -19,7 +19,7 @@ const Header = ({
           <BackIcon />
         </IconButton>
       )}
-      <p className="text-primary">{title}</p>
+      <p className="text-dark">{title}</p>
     </div>
   );
 };

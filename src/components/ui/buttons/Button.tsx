@@ -15,8 +15,8 @@ const Button = ({
 }: IButtonProps) => {
   const variantClasses =
     variant === "contained"
-      ? "border-none bg-primary-400 hover:bg-dark text-light"
-      : "border-1 border-primary-400 text-dark hover:bg-primary-400 hover:text-light";
+      ? "border-none bg-primary-300 hover:bg-dark text-light"
+      : "border-1 border-primary-300 text-dark hover:bg-primary-300 hover:text-light";
 
   return (
     <button
