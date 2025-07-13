@@ -37,9 +37,10 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
 
 2. Install dependencies:
 
-````bash
-cd audio-visualizer
-npm i
+```bash
+   cd audio-visualizer
+   npm i
+```
 
 3. Run the Development Server:
 
