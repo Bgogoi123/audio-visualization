@@ -1,7 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import BackIcon from "../../assets/icons/left-arrow.svg?react";
 import IconButton from "../ui/buttons/IconButton";
 
-interface IHeaderProps {
+export interface IHeaderProps {
   handleBack?: () => void;
   showBackButton?: boolean;
   title: string;
@@ -12,15 +13,22 @@ const Header = ({
   showBackButton = false,
   title,
 }: IHeaderProps) => {
+  const navigate = useNavigate();
+
+  function onBack() {
+    navigate(-1);
+    handleBack?.();
+  }
+
   return (
-    <div className="p-[1rem] flex flex-row gap-[0.5rem] items-end border-1 border-b-primary-200">
+    <header className="fixed top-0 left-0 w-full z-[1000] p-[1rem] flex flex-row gap-[0.5rem] items-end bg-white">
       {showBackButton && (
-        <IconButton handleClick={handleBack}>
+        <IconButton handleClick={onBack}>
           <BackIcon />
         </IconButton>
       )}
       <p className="text-dark">{title}</p>
-    </div>
+    </header>
   );
 };
 

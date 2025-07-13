@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 
 interface IButtonProps {
-  label: ReactNode;
+  children: ReactNode;
   className?: string;
   handleClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   variant?: "contained" | "outlined";
 }
 
 const Button = ({
-  label,
+  children,
   className,
   handleClick,
   variant = "contained",
@@ -20,10 +20,10 @@ const Button = ({
 
   return (
     <button
-      className={`${className} ${variantClasses} rounded-md py-[8px] px-[14px] cursor-pointer text-[14px] transition-colors duration-700`}
+      className={`${className} ${variantClasses} rounded-md py-[8px] px-[14px] cursor-pointer text-[14px] transition-colors duration-500`}
       onClick={handleClick}
     >
-      <p>{label}</p>
+      {children}
     </button>
   );
 };

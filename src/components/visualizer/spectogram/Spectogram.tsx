@@ -15,7 +15,8 @@ export type Theme =
   | "heatmap"
   | "bright-daylight"
   | "zoro"
-  | "nezuko";
+  | "nezuko"
+  | "cosmic-void";
 
 export type ThemeConfig = {
   id: Theme;
@@ -66,7 +67,7 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
   },
   {
     id: "heatmap",
-    name: "HeatMap",
+    name: "Heat Map",
     calc: (percent: number) => ({
       hue: Math.round((1 - percent) * 240),
       saturation: 100,
@@ -77,9 +78,19 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     id: "zoro",
     name: "Roronoa Zoro",
     calc: (percent: number) => {
-      const hue = 120 - percent * 40; // 120 = green, towards 80 = lime-green
+      const hue = 120 - percent * 40;
       const saturation = 100;
-      const lightness = 10 + percent * 40; // darker for quiet, brighter for loud
+      const lightness = 10 + percent * 40;
+      return { hue, saturation, lightness };
+    },
+  },
+  {
+    id: "cosmic-void",
+    name: "Cosmic Void",
+    calc: (percent: number) => {
+      const hue = 240 - percent * 240;
+      const saturation = 100;
+      const lightness = 5 + percent * 60;
       return { hue, saturation, lightness };
     },
   },
@@ -189,27 +200,6 @@ const Spectrogram = ({
     setIsPlaying((prev) => !prev);
   }
 
-  function clearCanvas() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  useEffect(() => {
-    if (isReset) {
-      setAnalyzer(null);
-      setAudioContext(null);
-      setAudioSourceNode(null);
-      setInternalAudioRef(null);
-      setFileName("");
-      setIsPlaying(false);
-      animationFrameRef.current = 0;
-      clearCanvas();
-    }
-  }, [isReset]);
-
   useEffect(() => {
     const handleAudioEnded = () => setIsPlaying(false);
     internalAudioRef?.addEventListener("ended", handleAudioEnded);
@@ -238,21 +228,22 @@ const Spectrogram = ({
   }, [audioContext, audioSourceNode]);
 
   return (
-    <div className="p-4 flex flex-col">
-      <h1 className="text-xl font-bold mb-2">Spectrogram Viewer</h1>
-
-      <Controller
-        togglePlay={togglePlay}
-        fileName={fileName}
-        isPlaying={isPlaying}
-        onThemeChange={(value) => setTheme(value)}
-      />
+    <div className="w-full flex flex-col gap-[1rem]">
+      {(file || fileContent) && (
+        <Controller
+          togglePlay={togglePlay}
+          fileName={fileName}
+          isPlaying={isPlaying}
+          onThemeChange={(value) => setTheme(value)}
+          themeList={SPECTOGRAM_THEMES}
+        />
+      )}
 
       <canvas
         ref={canvasRef}
         width="1000"
         height="400"
-        className="mt-4 border bg-black"
+        className="mt-4 rounded-md border bg-canvas"
         onClick={togglePlay}
       />
     </div>

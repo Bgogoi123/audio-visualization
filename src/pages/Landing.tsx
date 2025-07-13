@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import Header from "../components/header/Header";
 import Button from "../components/ui/buttons/Button";
 import SpectrogramImageUrl from "../assets/images/spectrogram.jpg";
 import DoneIcon from "../assets/icons/done.svg?react";
-import Footer from "../components/footer/Footer";
 import AudioWave from "../assets/lottie/audioWave.json";
 import Lottie from "lottie-react";
 
@@ -32,9 +30,7 @@ const Landing = () => {
 
   return (
     <div className="flex flex-col">
-      <Header title="Spectranaut" />
-
-      <div className="min-h-[400px] bg-primary-200 flex flex-row justify-between gap-[1rem]">
+      <div className="min-h-[400px] bg-primary-200 flex flex-row flex-wrap justify-between gap-0">
         <div className="flex flex-col gap-[1rem] justify-center items-start px-[2rem]">
           <div className="flex flex-col gap-0">
             <p className="text-[30px] text-dark leading-0">
@@ -42,17 +38,20 @@ const Landing = () => {
             </p>
             <p className="text-[60px] text-dark font-bold">Spectranaut</p>
             <p className="max-w-[300px] text-[14px] text-dark">
-              The Spectogram Visualizer with Custom Themes and Audio Files{" "}
+              The Spectogram Visualizer with Custom Themes and Audio Files
             </p>
           </div>
 
-          <Button
-            label="Get Started"
-            handleClick={() => navigate("/visualizer")}
-          />
+          <Button handleClick={() => navigate("/visualizer")}>
+            Get Started
+          </Button>
         </div>
 
-        <Lottie animationData={AudioWave} loop={true} />
+        <Lottie
+          animationData={AudioWave}
+          loop={true}
+          style={{ paddingRight: "2rem" }}
+        />
       </div>
 
       <div className="min-h-[300px] flex flex-row justify-between flex-wrap gap-[2rem] overflow-auto py-[4rem] px-[2rem]">
@@ -90,10 +89,13 @@ const Landing = () => {
           heading="Spot the Frequencies -"
           description="Instantly identify high-pitched spikes, deep bass hums, and everything in between — all through vibrant color gradients."
         />
-        <Button label="Visualize Now" className="self-start" />
+        <Button
+          className="self-start"
+          handleClick={() => navigate("/visualizer")}
+        >
+          Visualize Now
+        </Button>
       </div>
-
-      <Footer />
     </div>
   );
 };
