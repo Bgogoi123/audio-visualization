@@ -1,9 +1,19 @@
-const Footer = () => {
+export interface IFooterProps {
+  variant?: "contained" | "light";
+}
+
+const Footer = ({ variant = "contained" }: IFooterProps) => {
   return (
-    <footer className="flex flex-row justify-between items-center bg-primary-100 text-dark px-[2rem] py-[1rem] flex-wrap">
+    <footer
+      className={`flex flex-row flex-wrap justify-between items-center text-dark px-[2rem] py-[1rem] 
+        ${variant === "contained" ? "bg-primary-200" : "bg-white"}`}
+    >
       <p className="text-[14px] text-dark">
         Spectranaut by{" "}
-        <a href="https://bg-oncode.netlify.app/" className="hover:text-dark underline">
+        <a
+          href="https://bg-oncode.netlify.app/"
+          className="hover:text-dark underline"
+        >
           BG
         </a>
       </p>

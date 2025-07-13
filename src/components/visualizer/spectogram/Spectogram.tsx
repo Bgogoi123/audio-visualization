@@ -10,12 +10,11 @@ interface ISpectogramProps {
 
 export type Theme =
   | "cool-night"
-  | "monochrome"
-  | "reverse-heatmap"
+  | "cosmic-void"
   | "heatmap"
-  | "bright-daylight"
-  | "zoro"
-  | "nezuko";
+  | "monochrome"
+  | "nezuko"
+  | "zoro";
 
 export type ThemeConfig = {
   id: Theme;
@@ -38,12 +37,22 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     }),
   },
   {
-    id: "nezuko",
-    name: "Nezuko's Fire",
+    id: "cosmic-void",
+    name: "Cosmic Void",
+    calc: (percent: number) => {
+      const hue = 240 - percent * 240;
+      const saturation = 100;
+      const lightness = 5 + percent * 60;
+      return { hue, saturation, lightness };
+    },
+  },
+  {
+    id: "heatmap",
+    name: "Heat Map",
     calc: (percent: number) => ({
-      hue: 260 + percent * 120,
+      hue: Math.round((1 - percent) * 240),
       saturation: 100,
-      lightness: 20 + percent * 50,
+      lightness: 50,
     }),
   },
   {
@@ -56,30 +65,21 @@ export const SPECTOGRAM_THEMES: ThemeConfig[] = [
     }),
   },
   {
-    id: "bright-daylight",
-    name: "Bright Day Light",
+    id: "nezuko",
+    name: "Nezuko's Fire",
     calc: (percent: number) => ({
-      hue: percent * 50,
+      hue: 260 + percent * 120,
       saturation: 100,
-      lightness: 60,
-    }),
-  },
-  {
-    id: "heatmap",
-    name: "HeatMap",
-    calc: (percent: number) => ({
-      hue: Math.round((1 - percent) * 240),
-      saturation: 100,
-      lightness: 50,
+      lightness: 20 + percent * 50,
     }),
   },
   {
     id: "zoro",
     name: "Roronoa Zoro",
     calc: (percent: number) => {
-      const hue = 120 - percent * 40; // 120 = green, towards 80 = lime-green
+      const hue = 120 - percent * 40;
       const saturation = 100;
-      const lightness = 10 + percent * 40; // darker for quiet, brighter for loud
+      const lightness = 10 + percent * 40;
       return { hue, saturation, lightness };
     },
   },
@@ -189,26 +189,37 @@ const Spectrogram = ({
     setIsPlaying((prev) => !prev);
   }
 
-  function clearCanvas() {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
-    if (!ctx) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
+  function reset() {
+    try {
+      // Stop playback
+      internalAudioRef?.pause();
+      internalAudioRef?.removeAttribute("src");
+      internalAudioRef?.load();
 
-  useEffect(() => {
-    if (isReset) {
+      // Disconnect audio nodes
+      if (audioSourceNode) audioSourceNode?.disconnect();
+      if (audioContext) audioContext?.close();
+
+      // Cancel animation
+      cancelAnimationFrame(animationFrameRef.current);
+
+      // Clear canvas
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d", { willReadFrequently: true });
+      if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Reset state
       setAnalyzer(null);
       setAudioContext(null);
       setAudioSourceNode(null);
       setInternalAudioRef(null);
       setFileName("");
       setIsPlaying(false);
-      animationFrameRef.current = 0;
-      clearCanvas();
+      setTheme("heatmap");
+    } catch (err) {
+      console.error("Error while reseting spectogram: ", err);
     }
-  }, [isReset]);
+  }
 
   useEffect(() => {
     const handleAudioEnded = () => setIsPlaying(false);
@@ -232,27 +243,32 @@ const Spectrogram = ({
 
   useEffect(() => {
     return () => {
-      audioContext?.close();
-      audioSourceNode?.disconnect();
+      if (audioContext) audioContext?.close();
+      if (audioSourceNode) audioSourceNode?.disconnect();
     };
   }, [audioContext, audioSourceNode]);
 
-  return (
-    <div className="p-4 flex flex-col">
-      <h1 className="text-xl font-bold mb-2">Spectrogram Viewer</h1>
+  useEffect(() => {
+    reset();
+  }, [isReset]);
 
-      <Controller
-        togglePlay={togglePlay}
-        fileName={fileName}
-        isPlaying={isPlaying}
-        onThemeChange={(value) => setTheme(value)}
-      />
+  return (
+    <div className="w-full flex flex-col gap-[1rem]">
+      {(file || fileContent) && (
+        <Controller
+          togglePlay={togglePlay}
+          fileName={fileName}
+          isPlaying={isPlaying}
+          onThemeChange={(value) => setTheme(value)}
+          themeList={SPECTOGRAM_THEMES}
+        />
+      )}
 
       <canvas
         ref={canvasRef}
         width="1000"
         height="400"
-        className="mt-4 border bg-black"
+        className="rounded-md border bg-canvas"
         onClick={togglePlay}
       />
     </div>
