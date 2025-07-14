@@ -3,12 +3,11 @@ import Spectogram from "../components/visualizer/spectogram/Spectogram";
 import SourceController from "../components/audioControllers/SourceController";
 import PoliceSiren from "../assets/audio/police-siren-sound-effect-240674.mp3";
 import LazyDay from "../assets/audio/lazy-day-stylish-futuristic-chill-239287.mp3";
-import CinematicSounds from "../assets/audio/CinematicSoundEffects.mp3"
-import LuffyBakaSong from "../assets/audio/LuffyBakaSong.mp3"
-import ManHumming from "../assets/audio/ManHumming.mp3"
-import PhoneDial from "../assets/audio/PhoneDial.mp3"
-import BirdsSong from "../assets/audio/birdsSinging.mp3"
-
+import CinematicSounds from "../assets/audio/CinematicSoundEffects.mp3";
+import LuffyBakaSong from "../assets/audio/LuffyBakaSong.mp3";
+import ManHumming from "../assets/audio/ManHumming.mp3";
+import PhoneDial from "../assets/audio/PhoneDial.mp3";
+import BirdsSong from "../assets/audio/birdsSinging.mp3";
 
 export type AudioData = { id: number; name: string; url: string };
 
