@@ -1,22 +1,25 @@
 import { useState } from "react";
 import Spectogram from "../components/visualizer/spectogram/Spectogram";
 import SourceController from "../components/audioControllers/SourceController";
-import SFXDripsUrl from "../assets/audio/sfx-drips-from-ice-melt-in-a-glacial-cave-368277.mp3";
 import PoliceSiren from "../assets/audio/police-siren-sound-effect-240674.mp3";
-import Flute from "../assets/audio/krishna-flute-2669.mp3";
-import BirdsAndNature from "../assets/audio/rainy-day-in-town-with-birds-singing-194011.mp3";
-import AnthemOfVictory from "../assets/audio/anthem-of-victory-111206.mp3";
 import LazyDay from "../assets/audio/lazy-day-stylish-futuristic-chill-239287.mp3";
+import CinematicSounds from "../assets/audio/CinematicSoundEffects.mp3"
+import LuffyBakaSong from "../assets/audio/LuffyBakaSong.mp3"
+import ManHumming from "../assets/audio/ManHumming.mp3"
+import PhoneDial from "../assets/audio/PhoneDial.mp3"
+import BirdsSong from "../assets/audio/birdsSinging.mp3"
+
 
 export type AudioData = { id: number; name: string; url: string };
 
 const AUDIO_URL: AudioData[] = [
   { id: 1, name: "A Lazy Day", url: LazyDay },
-  { id: 2, name: "Anthem of Victory", url: AnthemOfVictory },
-  { id: 3, name: "Birds and Nature", url: BirdsAndNature },
-  { id: 4, name: "Drips from Melting Ice in a Glacial Cave", url: SFXDripsUrl },
-  { id: 5, name: "Flute", url: Flute },
-  { id: 6, name: "Police Siren", url: PoliceSiren },
+  { id: 2, name: "Birds' Song", url: BirdsSong },
+  { id: 3, name: "Cinematic Sound Effects", url: CinematicSounds },
+  { id: 4, name: "Luffy Baka Song", url: LuffyBakaSong },
+  { id: 5, name: "Man Humming", url: ManHumming },
+  { id: 6, name: "Phone Dial", url: PhoneDial },
+  { id: 7, name: "Police Siren", url: PoliceSiren },
 ];
 
 export type AudioContent = { url: string; name: string };
