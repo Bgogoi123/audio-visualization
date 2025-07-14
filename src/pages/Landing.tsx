@@ -29,7 +29,7 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pt-[3rem] gap-0">
       <div className="min-h-[400px] bg-primary-200 flex flex-row flex-wrap justify-between gap-0">
         <div className="flex flex-col gap-[1rem] justify-center items-start px-[2rem]">
           <div className="flex flex-col gap-0">
@@ -54,7 +54,7 @@ const Landing = () => {
         />
       </div>
 
-      <div className="min-h-[300px] flex flex-row justify-between flex-wrap gap-[2rem] overflow-auto py-[4rem] px-[2rem]">
+      <div className="min-h-[150px] flex flex-row justify-between flex-wrap gap-[2rem] overflow-auto py-[4rem] px-[2rem] bg-white">
         <div className="flex flex-col gap-1">
           <p className="text-[34px] font-bold text-dark">
             What is a Spectogram?
@@ -74,7 +74,7 @@ const Landing = () => {
         />
       </div>
 
-      <div className="min-h-[300px] flex flex-col gap-[1rem] py-[4rem] px-[2rem]">
+      <div className="min-h-[300px] flex flex-col gap-[1rem] py-[5rem] px-[2rem] bg-white">
         <p className="text-[34px] font-bold text-dark">Why Spectranaut?</p>
 
         <WhySpectogramContent

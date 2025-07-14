@@ -21,7 +21,7 @@ const Header = ({
   }
 
   return (
-    <header className="fixed top-0 left-0 w-full z-[1000] p-[1rem] flex flex-row gap-[0.5rem] items-end bg-white">
+    <header className="fixed top-0 left-0 w-full z-[1000] shadow-md p-[1rem] flex flex-row gap-[0.5rem] items-end bg-white">
       {showBackButton && (
         <IconButton handleClick={onBack}>
           <BackIcon />

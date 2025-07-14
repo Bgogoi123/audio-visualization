@@ -1,3 +1,6 @@
+import GitHubIcon from "../../assets/icons/github.svg?react";
+import LinkedInIcon from "../../assets/icons/linkedin.svg?react";
+
 export interface IFooterProps {
   variant?: "contained" | "light";
 }
@@ -5,14 +8,14 @@ export interface IFooterProps {
 const Footer = ({ variant = "contained" }: IFooterProps) => {
   return (
     <footer
-      className={`flex flex-row flex-wrap justify-between items-center text-dark px-[2rem] py-[1rem] 
+      className={`fixed bottom-0 left-0 h-[50px] w-full flex flex-row flex-wrap justify-between items-center text-dark px-[2rem] py-[1rem] 
         ${variant === "contained" ? "bg-primary-200" : "bg-white"}`}
     >
       <p className="text-[14px] text-dark">
         Spectranaut by{" "}
         <a
           href="https://bg-oncode.netlify.app/"
-          className="hover:text-dark underline"
+          className="hover:text-primary-300 underline"
         >
           BG
         </a>
@@ -21,15 +24,15 @@ const Footer = ({ variant = "contained" }: IFooterProps) => {
       <div className="flex flex-row gap-[1rem] flex-wrap">
         <a
           href="https://github.com/Bgogoi123"
-          className="text-[14px] text-dark hover:text-dark"
+          className="text-[14px] text-dark hover:text-primary-300 decoration-0"
         >
-          GitHub
+          <GitHubIcon />
         </a>
         <a
           href="https://www.linkedin.com/in/bharatigogoi/"
-          className="text-[14px] text-dark hover:text-dark"
+          className="text-[14px] text-dark hover:text-primary-300"
         >
-          LinkedIn
+          <LinkedInIcon />
         </a>
       </div>
     </footer>
