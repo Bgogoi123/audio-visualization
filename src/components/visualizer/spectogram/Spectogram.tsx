@@ -140,92 +140,50 @@ const Spectrogram = ({
     const dataArray = new Uint8Array(bufferLength);
     const width = canvas.width;
     const height = canvas.height;
-    const sliceWidth = 1;
 
-    // Canvas Padding
-    const paddingLeft = 50;
-    const paddingTop = 10;
-    const paddingBottom = 5;
+    const sliceWidth = 1;
 
     const draw = () => {
       if (!isPlaying) return;
 
       analyser.getByteFrequencyData(dataArray);
 
-      // Shift the canvas to the left
+      // Shift the entire canvas one pixel to the left
       const imageData = ctx.getImageData(
-        paddingLeft + sliceWidth,
+        sliceWidth,
         0,
-        width - paddingLeft - sliceWidth,
+        width - sliceWidth,
         height
       );
-      ctx.putImageData(imageData, paddingLeft, 0);
+      ctx.putImageData(imageData, 0, 0);
 
-      // Draw new frequency data
+      // Draw the new frequency data at the far right
       for (let y = 0; y < bufferLength; y++) {
         const value = dataArray[y];
         const percent = value / 255;
-        const usableHeight = height - paddingTop - paddingBottom;
-        const barY = (y / bufferLength) * usableHeight;
-        const barHeight = usableHeight / bufferLength;
-        const alpha = percent < 0.02 ? 0 : 1;
+        const barY = (y / bufferLength) * height;
+        const barHeight = height / bufferLength;
+        const alpha = percent < 0.02 ? 0 : 1; // make almost-silent bins transparent
 
+        // theme - selection
         const selectedTheme = SPECTOGRAM_THEMES.find((th) => th.id === theme);
-        if (selectedTheme) {
+        if (selectedTheme !== undefined) {
           const { hue, saturation, lightness } = selectedTheme.calc(percent);
+          // use these values in hsla:
           ctx.fillStyle = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
         } else {
+          // use a default theme (say heatmap).
           const hue = Math.round((1 - percent) * 240);
           ctx.fillStyle = `hsla(${hue}, 100%, 50%, ${alpha})`;
         }
-
-        ctx.fillRect(
-          width - sliceWidth,
-          height - paddingBottom - barY,
-          sliceWidth,
-          barHeight
-        );
+        ctx.fillRect(width - sliceWidth, height - barY, sliceWidth, barHeight);
       }
-
-      // Clear axis area
-      ctx.clearRect(0, 0, paddingLeft, height);
-
-      // Y-axis line
-      ctx.beginPath();
-      ctx.moveTo(paddingLeft, paddingTop);
-      ctx.lineTo(paddingLeft, height - paddingBottom);
-      ctx.strokeStyle = "#fff";
-      ctx.stroke();
-
-      // Y-axis ticks and labels
-      const totalTicks = 5;
-      for (let i = 0; i <= totalTicks; i++) {
-        const y =
-          paddingTop + (i * (height - paddingTop - paddingBottom)) / totalTicks;
-
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft - 5, y);
-        ctx.lineTo(paddingLeft, y);
-        ctx.strokeStyle = "#fff";
-        ctx.stroke();
-
-        const freq = Math.round(
-          ((1 - i / totalTicks) * (audioContext?.sampleRate ?? 44100)) / 2
-        );
-
-        ctx.fillStyle = "#fff";
-        ctx.textAlign = "right";
-        ctx.textBaseline = "middle";
-        ctx.font = "8px";
-        ctx.fillText(`${freq}Hz`, paddingLeft - 8, y);
-      }
-
       animationFrameRef.current = requestAnimationFrame(draw);
     };
 
     draw();
   };
-
+   
   function togglePlay() {
     if (isPlaying) internalAudioRef?.pause();
     else internalAudioRef?.play();
