@@ -10,13 +10,13 @@ interface IAppLayoutProps {
 
 const AppLayout = ({ children, headerProps, footerProps }: IAppLayoutProps) => {
   return (
-    <div className="flex flex-col gap-0">
+    <div className="h-[100vh] flex flex-col gap-0 bg-primary-100" >
       <Header
         title={headerProps.title}
         handleBack={headerProps.handleBack}
         showBackButton={headerProps.showBackButton}
       />
-      <main className="flex-1 pt-[64px]">{children}</main>
+      <main className="flex-1 h-[100vh]">{children}</main>
       <Footer variant={footerProps?.variant} />
     </div>
   );

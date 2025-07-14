@@ -31,6 +31,7 @@ const AudioVisualizer = () => {
     if (fileList === null || fileList.length <= 0) return;
 
     const file = fileList[0];
+
     setAudioFile(file);
   }
 
@@ -52,24 +53,28 @@ const AudioVisualizer = () => {
     setAudioContent(null);
     setAudioFile(null);
     setIsSpectanautReset(true);
+
+    setTimeout(() => {
+      setIsSpectanautReset(false);
+    }, 300);
   }
 
   return (
-      <div className="h-[100vh] flex flex-col gap-[1rem] items-center py-[1rem] px-[3rem] bg-primary-100">
-        <SourceController
-          fileOptions={AUDIO_URL}
-          onInputChange={handleChange}
-          onSelectAudio={handleSelect}
-          onSelectFromDevice={handleSelectFromDevice}
-          onReset={handleResetSpectogram}
-        />
+    <div className="flex flex-col gap-[1rem] items-center py-[5rem] px-[3rem] bg-primary-100">
+      <SourceController
+        fileOptions={AUDIO_URL}
+        onInputChange={handleChange}
+        onSelectAudio={handleSelect}
+        onSelectFromDevice={handleSelectFromDevice}
+        onReset={handleResetSpectogram}
+      />
 
-        <Spectogram
-          file={audioFile}
-          fileContent={audioContent}
-          isReset={isSpectanautReset}
-        />
-      </div>
+      <Spectogram
+        file={audioFile}
+        fileContent={audioContent}
+        isReset={isSpectanautReset}
+      />
+    </div>
   );
 };
 

@@ -40,11 +40,12 @@ const SourceController = ({
   function handleReset() {
     if (inputRef.current) inputRef.current.classList.add("hidden");
     setIsSelectable(true);
+    setSelectValue(-1)
     onReset?.();
   }
 
   return (
-    <div className="min-h-[70px] w-full rounded-md flex flex-row flex-wrap items-center gap-[1rem] bg-light p-[1rem]">
+    <div className="min-h-[70px] w-full rounded-md flex flex-row flex-wrap overflow-auto items-center gap-[1rem] bg-light p-[1rem]">
       <select
         value={selectValue}
         onChange={handleSelect}
