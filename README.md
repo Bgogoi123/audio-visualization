@@ -37,22 +37,22 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
 
 2. Install dependencies:
 
-```bash
+   ```bash
    cd audio-visualizer
    npm i
-```
+   ```
 
 3. Run the Development Server:
 
-```bash
-npm run dev
-```
+   ```bash
+   npm run dev
+   ```
 
-- Open your browser and go to http://localhost:5173
+4. Open your browser and go to http://localhost:5173
 
 ## 🤖 Inspiration
 
-**Spectrograms** turn sound into stunning, flowing visuals — a concept that instantly captivated me. The way frequencies transform into waves of color sparked my curiosity and inspired me to build **Spectranaut**: a tool to explore and appreciate the beauty of sound in motion.
+**Spectrograms** Turn Sound Into Stunning, Flowing Visuals: a concept that instantly captivated me. The way frequencies transform into waves of color sparked my curiosity and inspired me to build **Spectranaut**: a tool to explore and appreciate the beauty of sound in motion.
 
 ## 📚 References
 
