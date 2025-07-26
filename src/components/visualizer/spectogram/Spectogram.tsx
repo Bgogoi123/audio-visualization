@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { AudioContent } from "../../../pages/AudioVisualizer";
 import Controller from "./Controller";
-import SpeechToText from "../../transcription/SpeechToText/SpeechToText";
 
 interface ISpectogramProps {
   file?: File | null;
@@ -272,8 +271,6 @@ const Spectrogram = ({
         className="h-[400px] bg-canvas rounded-md border"
         onClick={togglePlay}
       />
-
-      {file && <SpeechToText audioFile={file} />}
     </div>
   );
 };

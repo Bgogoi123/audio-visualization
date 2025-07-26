@@ -25,8 +25,11 @@ export const useSpeechToText = () => {
 
         if (result.text) setTranscription(result.text);
       }
+      else {
+        console.warn("Error! ", response)
+      }
     } catch (err) {
-      console.warn("error ---->", err);
+      console.warn("Error! ", err);
     } finally {
       setLoading(false);
     }

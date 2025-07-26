@@ -1,39 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSpeechToText } from "../../../hooks/useSpeechToText";
 import Button from "../../ui/buttons/Button";
 
-const SpeechToText = ({ audioFile }: { audioFile: File }) => {
-  const [transcriptionText, setTranscriptionText] = useState<string[]>([]);
+interface ISpeechToTextProps {
+  audioFile: File;
+  onTranscribe?: (text: string[]) => void;
+}
+
+const SpeechToText = ({ audioFile, onTranscribe }: ISpeechToTextProps) => {
   const { loading, transcribeAudio, transcription } = useSpeechToText();
 
+  function handleTranscription(
+    _: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    onTranscribe?.([]);
+    if (audioFile) transcribeAudio(audioFile);
+  }
+
   useEffect(() => {
-    if (transcription.trim() !== "")
-      setTranscriptionText(transcription.split(/[!.?]/));
+    if (transcription.trim() !== "") {
+      const text = transcription.split(/[!.?]/);
+      onTranscribe?.(text);
+    }
   }, [transcription]);
 
   return (
-    <div className="rounded-md flex flex-col gap-[0.5rem] items-start bg-light p-[1rem]">
-      <Button
-        variant="contained"
-        handleClick={() => transcribeAudio(audioFile)}
-        loading={loading}
-      >
-        Transcribe
-      </Button>
-
-      <div className="rounded-md p-[8px] flex flex-col gap-[8px]">
-        {transcriptionText.length > 0 &&
-          transcriptionText.map(
-            (text, i) =>
-              text.trim() !== "" && (
-                <p key={i}>
-                  {text}
-                  {"."}
-                </p>
-              )
-          )}
-      </div>
-    </div>
+    <Button
+      variant="contained"
+      handleClick={handleTranscription}
+      loading={loading}
+    >
+      Transcribe
+    </Button>
   );
 };
 

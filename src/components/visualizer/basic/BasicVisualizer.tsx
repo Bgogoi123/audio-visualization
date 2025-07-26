@@ -53,27 +53,19 @@ const BasicVisualizer = ({
       const blockSize = Math.floor(channelData.length / samples); //  How many audio samples to group together for each bar
       const waveform: number[] = [];
 
-      // console.log("channelData: ", channelData);
-      // console.log("block size: ", blockSize);
-
       // Divide the audio into 60 blocks (one for each waveform bar)
       for (let i = 0; i < samples; i++) {
         const start = i * blockSize;
         const end = start + blockSize;
         let sum = 0;
 
-        // console.log({ start, end });
-
         // Calculate the average amplitude; This gives us the "energy" or "loudness" of each section
         for (let j = start; j < end; j++) {
           sum += Math.abs(channelData[j]);
-          // console.log("adding to sum: ", Math.abs(channelData[j]));
         }
 
         const average = sum / blockSize;
         waveform.push(average);
-
-        // console.log({ average });
       }
 
       // Normalize the waveform data (scale to 0-1 range)
