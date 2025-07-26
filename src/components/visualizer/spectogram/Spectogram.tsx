@@ -183,7 +183,7 @@ const Spectrogram = ({
 
     draw();
   };
-   
+
   function togglePlay() {
     if (isPlaying) internalAudioRef?.pause();
     else internalAudioRef?.play();

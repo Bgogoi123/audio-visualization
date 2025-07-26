@@ -1,28 +1,38 @@
 import { useRef, useState } from "react";
 import Button from "../ui/buttons/Button";
 import type { AudioData } from "../../pages/AudioVisualizer";
+import SpeechToText from "../transcription/SpeechToText/SpeechToText";
+import { convertUrlToFile, isSupportedAudioType } from "../../utils/utils";
+import { useToast } from "../../hooks/useToast";
+
+const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024;
 
 interface IControllerProps {
   fileOptions?: AudioData[];
-  onInputChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange?: (file: File) => void;
+  onReset?: () => void;
   onSelectAudio?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSelectFromDevice?: () => void;
-  onReset?: () => void;
+  onTranscribeAudio?: (text: string[]) => void;
 }
 
 const SourceController = ({
   fileOptions,
   onInputChange,
+  onReset,
   onSelectAudio,
   onSelectFromDevice,
-  onReset,
+  onTranscribeAudio,
 }: IControllerProps) => {
   const [isSelectable, setIsSelectable] = useState(true);
   const [selectValue, setSelectValue] = useState(-1);
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+
+  const { setToast } = useToast();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+  async function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
     const value = e.target.value;
 
     if (value === "device") {
@@ -32,16 +42,56 @@ const SourceController = ({
       setIsSelectable(false);
       setSelectValue(-1);
     } else {
-      setSelectValue(Number(value));
-      onSelectAudio?.(e);
+      if (!isNaN(Number(value))) {
+        setSelectValue(Number(value));
+        onSelectAudio?.(e);
+
+        const selectedOption = fileOptions?.find(
+          (op) => op.id === Number(value)
+        );
+        if (selectedOption) {
+          const convertedFile = await convertUrlToFile(
+            selectedOption.url,
+            selectedOption.name
+          );
+          if (convertedFile instanceof File) setAudioFile(convertedFile);
+        }
+      }
     }
   }
 
   function handleReset() {
     if (inputRef.current) inputRef.current.classList.add("hidden");
     setIsSelectable(true);
-    setSelectValue(-1)
+    setSelectValue(-1);
+    setAudioFile(null);
     onReset?.();
+  }
+
+  function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const fileList = e.target.files;
+
+    if (fileList === null || fileList.length <= 0) return;
+
+    const file = fileList[0];
+
+    if (
+      file &&
+      isSupportedAudioType(file.type) &&
+      file.size <= MAX_FILE_SIZE_BYTES
+    ) {
+      setAudioFile(file);
+      onInputChange?.(file);
+    } else {
+      setToast({
+        title: "Select a valid audio file of size less than 5MB.",
+        variant: "error",
+      });
+    }
+  }
+
+  function handleTranscriptedText(text: string[]) {
+    onTranscribeAudio?.(text);
   }
 
   return (
@@ -71,9 +121,16 @@ const SourceController = ({
         type="file"
         ref={inputRef}
         accept="audio/*"
-        onChange={onInputChange}
+        onChange={handleFileInputChange}
         className="min-w-1/3 hidden border-1 border-[#ccc] rounded-md p-2 cursor-pointer hover:bg-blue-200"
       />
+
+      {audioFile && (
+        <SpeechToText
+          audioFile={audioFile}
+          onTranscribe={handleTranscriptedText}
+        />
+      )}
 
       <Button variant="outlined" handleClick={handleReset}>
         Reset
