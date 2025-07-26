@@ -24,9 +24,8 @@ export const useSpeechToText = () => {
         const result = await response.json();
 
         if (result.text) setTranscription(result.text);
-      }
-      else {
-        console.warn("Error! ", response)
+      } else {
+        console.warn("Error! ", response);
       }
     } catch (err) {
       console.warn("Error! ", err);

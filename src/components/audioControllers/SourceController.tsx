@@ -3,6 +3,9 @@ import Button from "../ui/buttons/Button";
 import type { AudioData } from "../../pages/AudioVisualizer";
 import SpeechToText from "../transcription/SpeechToText/SpeechToText";
 import { convertUrlToFile, isSupportedAudioType } from "../../utils/utils";
+import { useToast } from "../../hooks/useToast";
+
+const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024;
 
 interface IControllerProps {
   fileOptions?: AudioData[];
@@ -24,6 +27,8 @@ const SourceController = ({
   const [isSelectable, setIsSelectable] = useState(true);
   const [selectValue, setSelectValue] = useState(-1);
   const [audioFile, setAudioFile] = useState<File | null>(null);
+
+  const { setToast } = useToast();
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -65,14 +70,24 @@ const SourceController = ({
 
   function handleFileInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fileList = e.target.files;
+
     if (fileList === null || fileList.length <= 0) return;
 
     const file = fileList[0];
 
-    if (file && isSupportedAudioType(file.type)) {
+    if (
+      file &&
+      isSupportedAudioType(file.type) &&
+      file.size <= MAX_FILE_SIZE_BYTES
+    ) {
       setAudioFile(file);
       onInputChange?.(file);
-    } else console.warn("Select a valid Audio file!");
+    } else {
+      setToast({
+        title: "Select a valid audio file of size less than 5MB.",
+        variant: "error",
+      });
+    }
   }
 
   function handleTranscriptedText(text: string[]) {
