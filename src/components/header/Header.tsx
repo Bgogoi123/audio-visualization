@@ -27,7 +27,9 @@ const Header = ({
           <BackIcon />
         </IconButton>
       )}
-      <p className="text-dark">{title}</p>
+      <p className="bg-gradient-to-r from-primary via-purple-500 to-dark bg-clip-text text-transparent">
+        {title}
+      </p>
     </header>
   );
 };

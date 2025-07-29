@@ -12,4 +12,16 @@
   --color-light: #ffffff;
   --color-dark: #1d2954;
   --color-canvas: #050f33;
+
+  --animate-shine: shine 3s ease-in-out infinite;
+  @keyframes shine {
+    0%, 100% {
+      background-size: 200% 200%;
+      background-position: left center;
+    }
+    50% {
+      background-size: 200% 200%;
+      background-position: right center;
+    }
+  }
 }
