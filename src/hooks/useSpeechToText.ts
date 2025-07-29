@@ -21,10 +21,12 @@ export const useSpeechToText = () => {
         }
       );
 
-      console.log({ response });
-
       if (response) {
-        if (response.status === 402 || response.status === 401 || response.status === 403) {
+        if (
+          response.status === 402 ||
+          response.status === 401 ||
+          response.status === 403
+        ) {
           setError({
             message:
               "API Key Expired! Please contact the owner to create a new key.",
