@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSpeechToText } from "../../../hooks/useSpeechToText";
 import Button from "../../ui/buttons/Button";
+import { useToast } from "../../../hooks/useToast";
 
 interface ISpeechToTextProps {
   audioFile: File;
@@ -8,7 +9,8 @@ interface ISpeechToTextProps {
 }
 
 const SpeechToText = ({ audioFile, onTranscribe }: ISpeechToTextProps) => {
-  const { loading, transcribeAudio, transcription } = useSpeechToText();
+  const { error, loading, transcribeAudio, transcription } = useSpeechToText();
+  const { setToast } = useToast();
 
   function handleTranscription(
     _: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -18,11 +20,20 @@ const SpeechToText = ({ audioFile, onTranscribe }: ISpeechToTextProps) => {
   }
 
   useEffect(() => {
+    if (error) {
+      setToast({
+        title: "Failed to Tanscribe!",
+        description: error.message,
+        variant: "error",
+        delay: 5000
+      });
+    }
+
     if (transcription.trim() !== "") {
       const text = transcription.split(/[!.?]/);
       onTranscribe?.(text);
     }
-  }, [transcription]);
+  }, [error, transcription]);
 
   return (
     <Button

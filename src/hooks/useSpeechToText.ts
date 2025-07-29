@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 export const useSpeechToText = () => {
   const [loading, setLoading] = useState(false);
   const [transcription, setTranscription] = useState("");
+  const [error, setError] = useState<{ message: string } | null>(null);
 
   const transcribeAudio = useCallback(async (file: File) => {
     setLoading(true);
@@ -20,19 +21,28 @@ export const useSpeechToText = () => {
         }
       );
 
-      if (response) {
-        const result = await response.json();
+      console.log({ response });
 
+      if (response) {
+        if (response.status === 402) {
+          setError({
+            message:
+              "API Key Expired! Please contact the owner to create a new key.",
+          });
+          return;
+        }
+
+        const result = await response.json();
         if (result.text) setTranscription(result.text);
       } else {
-        console.warn("Error! ", response);
+        setError({ message: response });
       }
-    } catch (err) {
-      console.warn("Error! ", err);
+    } catch (err: any) {
+      if (err?.message) setError({ message: err?.message ?? "" });
     } finally {
       setLoading(false);
     }
   }, []);
 
-  return { loading, transcription, transcribeAudio };
+  return { error, loading, transcription, transcribeAudio };
 };
