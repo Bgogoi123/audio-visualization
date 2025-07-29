@@ -58,7 +58,6 @@ const SourceController = ({
             selectedOption.name
           );
           if (convertedFile instanceof File) {
-            console.log("setting audio file from handleSelect..", convertedFile)
             setAudioFile(convertedFile);
             setIsLoadingFile(false);
           }
@@ -71,10 +70,11 @@ const SourceController = ({
     if (inputRef.current) inputRef.current.classList.add("hidden");
     setIsSelectable(true);
     setSelectValue(-1);
+
     setIsLoadingFile(true);
-    console.log("on reset...")
     setAudioFile(null);
     setIsLoadingFile(false);
+
     onReset?.();
   }
 
@@ -91,7 +91,6 @@ const SourceController = ({
       isSupportedAudioType(file.type) &&
       file.size <= MAX_FILE_SIZE_BYTES
     ) {
-      console.log("setting from file input change.. ", file)
       setAudioFile(file);
       setIsLoadingFile(false);
       onInputChange?.(file);
@@ -106,8 +105,6 @@ const SourceController = ({
   function handleTranscriptedText(text: string[]) {
     onTranscribeAudio?.(text);
   }
-
-  console.log({ isLoadingFile });
 
   return (
     <div className="min-h-[70px] w-full rounded-md flex flex-row flex-wrap overflow-auto items-center gap-[1rem] bg-light p-[1rem]">
