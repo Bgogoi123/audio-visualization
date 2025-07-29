@@ -2,6 +2,11 @@
 
 **Spectranaut** is an interactive audio visualization tool that transforms any audio file into a live spectrogram. With a variety of color themes and support for local file uploads, Spectranaut brings sound to life—visually.
 
+## 🎙️ What’s New?
+
+Spectranaut now supports **AI-powered speech-to-text transcription**, using Whisper from Hugging Face. Upload a spoken audio file (or select from existing list) and get an instant transcript. Perfect for analyzing speech, podcasts, lectures, or lyrics.
+
+
 ## What is a Spectogram?
 
 A **Spectrogram** is a visual representation of the frequencies present in a sound over time. It displays frequency on the vertical axis, time on the horizontal axis, and the intensity (amplitude) of each frequency is represented by color or brightness.
