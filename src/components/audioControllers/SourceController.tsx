@@ -4,6 +4,7 @@ import type { AudioData } from "../../pages/AudioVisualizer";
 import SpeechToText from "../transcription/SpeechToText/SpeechToText";
 import { convertUrlToFile, isSupportedAudioType } from "../../utils/utils";
 import { useToast } from "../../hooks/useToast";
+import LoaderIcon from "../../assets/icons/loader.svg?react";
 
 const MAX_FILE_SIZE_BYTES = 4 * 1024 * 1024;
 
@@ -26,6 +27,7 @@ const SourceController = ({
 }: IControllerProps) => {
   const [isSelectable, setIsSelectable] = useState(true);
   const [selectValue, setSelectValue] = useState(-1);
+  const [isLoadingFile, setIsLoadingFile] = useState(false);
   const [audioFile, setAudioFile] = useState<File | null>(null);
 
   const { setToast } = useToast();
@@ -50,11 +52,15 @@ const SourceController = ({
           (op) => op.id === Number(value)
         );
         if (selectedOption) {
+          setIsLoadingFile(true);
           const convertedFile = await convertUrlToFile(
             selectedOption.url,
             selectedOption.name
           );
-          if (convertedFile instanceof File) setAudioFile(convertedFile);
+          if (convertedFile instanceof File) {
+            setAudioFile(convertedFile);
+            setIsLoadingFile(false);
+          }
         }
       }
     }
@@ -64,7 +70,9 @@ const SourceController = ({
     if (inputRef.current) inputRef.current.classList.add("hidden");
     setIsSelectable(true);
     setSelectValue(-1);
+    setIsLoadingFile(true);
     setAudioFile(null);
+    setIsLoadingFile(false);
     onReset?.();
   }
 
@@ -73,6 +81,7 @@ const SourceController = ({
 
     if (fileList === null || fileList.length <= 0) return;
 
+    setIsLoadingFile(true);
     const file = fileList[0];
 
     if (
@@ -81,6 +90,7 @@ const SourceController = ({
       file.size <= MAX_FILE_SIZE_BYTES
     ) {
       setAudioFile(file);
+      setIsLoadingFile(false);
       onInputChange?.(file);
     } else {
       setToast({
@@ -93,6 +103,8 @@ const SourceController = ({
   function handleTranscriptedText(text: string[]) {
     onTranscribeAudio?.(text);
   }
+
+  console.log({ isLoadingFile });
 
   return (
     <div className="min-h-[70px] w-full rounded-md flex flex-row flex-wrap overflow-auto items-center gap-[1rem] bg-light p-[1rem]">
@@ -125,11 +137,15 @@ const SourceController = ({
         className="min-w-1/3 hidden border-1 border-[#ccc] rounded-md p-2 cursor-pointer hover:bg-blue-200"
       />
 
-      {audioFile && (
-        <SpeechToText
-          audioFile={audioFile}
-          onTranscribe={handleTranscriptedText}
-        />
+      {isLoadingFile ? (
+        <LoaderIcon className="animate-spin w-[15px] h-[15px] text-primary-300" />
+      ) : (
+        audioFile && (
+          <SpeechToText
+            audioFile={audioFile}
+            onTranscribe={handleTranscriptedText}
+          />
+        )
       )}
 
       <Button variant="outlined" handleClick={handleReset}>
