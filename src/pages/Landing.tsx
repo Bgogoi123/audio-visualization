@@ -37,8 +37,11 @@ const Landing = () => {
               Visualize your Audio with
             </p>
             <p className="text-[60px] text-dark font-bold">Spectranaut</p>
-            <p className="max-w-[300px] text-[14px] text-dark">
-              The Spectogram Visualizer with Custom Themes and Audio Files
+            <p className="max-w-[350px] text-[14px] text-dark">
+              The Spectogram Visualizer with Custom Themes and Audio Files,{" "}
+              <span className="animate-shine bg-gradient-to-r from-purple-500 via-primary to-dark bg-clip-text text-transparent">
+                Now with AI-Powered Transcription.
+              </span>
             </p>
           </div>
 
@@ -74,7 +77,7 @@ const Landing = () => {
         />
       </div>
 
-      <div className="min-h-[300px] flex flex-col gap-[1rem] py-[5rem] px-[2rem] bg-white">
+      <div className="min-h-[300px] flex flex-col gap-[1rem] py-[5rem] p-[2rem] bg-white">
         <p className="text-[34px] font-bold text-dark">Why Spectranaut?</p>
 
         <WhySpectogramContent
@@ -87,8 +90,14 @@ const Landing = () => {
         />
         <WhySpectogramContent
           heading="Spot the Frequencies -"
-          description="Instantly identify high-pitched spikes, deep bass hums, and everything in between — all through vibrant color gradients."
+          description="Instantly identify high-pitched spikes, deep bass hums, and everything in between; all through vibrant color gradients."
         />
+
+        <WhySpectogramContent
+          heading="Read the Audio -"
+          description="Spectranaut now transcribes spoken audio into readable text; perfect for analyzing lyrics, speech, or dialogue."
+        />
+        
         <Button
           className="self-start"
           handleClick={() => navigate("/visualizer")}

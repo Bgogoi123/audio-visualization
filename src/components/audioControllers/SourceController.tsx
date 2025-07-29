@@ -58,6 +58,7 @@ const SourceController = ({
             selectedOption.name
           );
           if (convertedFile instanceof File) {
+            console.log("setting audio file from handleSelect..", convertedFile)
             setAudioFile(convertedFile);
             setIsLoadingFile(false);
           }
@@ -71,6 +72,7 @@ const SourceController = ({
     setIsSelectable(true);
     setSelectValue(-1);
     setIsLoadingFile(true);
+    console.log("on reset...")
     setAudioFile(null);
     setIsLoadingFile(false);
     onReset?.();
@@ -89,6 +91,7 @@ const SourceController = ({
       isSupportedAudioType(file.type) &&
       file.size <= MAX_FILE_SIZE_BYTES
     ) {
+      console.log("setting from file input change.. ", file)
       setAudioFile(file);
       setIsLoadingFile(false);
       onInputChange?.(file);
