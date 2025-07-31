@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 
 exports.handler = async (event : any) => {
   const HUGGING_FACE_TOKEN = process.env.HUGGING_FACE_TOKEN;
@@ -14,6 +14,8 @@ exports.handler = async (event : any) => {
   try {
     const fileBuffer = Buffer.from(event.body, "base64");
     const contentType = event.headers["content-type"];
+
+    console.log("api calling from transcribe...")
 
     const response = await fetch(
       "https://api-inference.huggingface.co/models/openai/whisper-large-v3",
