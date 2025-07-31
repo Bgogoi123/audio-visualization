@@ -99,6 +99,7 @@ const SourceController = ({
         title: "Select a valid audio file of size less than 5MB.",
         variant: "error",
       });
+      setIsLoadingFile(false)
     }
   }
 
