@@ -84,7 +84,11 @@ const AudioVisualizer = () => {
       />
 
       {transcribedText.length > 0 && (
-        <TranscribedText text={transcribedText} ref={transcribeRef} />
+        <TranscribedText
+          text={transcribedText}
+          filename={audioFile?.name ?? audioContent?.name ?? "Untitled"}
+          ref={transcribeRef}
+        />
       )}
     </div>
   );

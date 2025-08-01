@@ -19,6 +19,8 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
 - 🧠 Learn how audio frequencies evolve over time.
 - 🖱️ Click-to-play/pause interface.
 - 🌈 HSLA-based theming for smooth visual gradients.
+- 🤖 One-click AI-powered speech to text transcription.
+- 💾 Save transcripts.
 
 ## 🚀 Live Demo
 
@@ -31,7 +33,8 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
 - Tailwind CSS
 - Canvas API
 
-## 📝 How to Use
+
+## 📝 How to Run the App Locally
 
 1. Clone the repository:
 
@@ -62,7 +65,10 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
 ## 📚 References
 
 - [MDN Web Docs: Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
-- [Spectrogram – Wikipedia](https://en.wikipedia.org/wiki/Spectrogram)
+- [Spectrogram - Wikipedia](https://en.wikipedia.org/wiki/Spectrogram)
 - [Understanding HSLA Colors](https://colortutorial.design/hsb.html)
-- [Visualizing Audio as a Waveform in React - Article](https://dev.to/ssk14/visualizing-audio-as-a-waveform-in-react-o67)
+- [Article: Visualizing Audio as a Waveform in React](https://dev.to/ssk14/visualizing-audio-as-a-waveform-in-react-o67)
 - [Spectogram Playground](https://musiclab.chromeexperiments.com/spectrogram/)
+- [Whisper](https://huggingface.co/openai/whisper-large-v3)
+- [HF Inference Provider](https://huggingface.co/docs/inference-providers/providers/hf-inference)
+- [HF Inference API](https://huggingface.co/docs/huggingface_hub/v0.13.2/en/guides/inference)
