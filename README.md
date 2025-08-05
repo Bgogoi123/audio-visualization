@@ -50,13 +50,32 @@ A **Spectrogram** is a visual representation of the frequencies present in a sou
    npm i
    ```
 
-3. Run the Development Server:
+3. Create your Hugging Face token:
+
+   - Go to https://huggingface.co/
+   - Click on your profile icon (top right),
+   - Select the option Access Tokens,
+   - Confirm your identity by entering your Hugging Face account password,
+   - Click on Create new token,
+   - Set the token type to 'Write',
+   - Enter a token name,
+   - Click 'Create token',
+   - Copy the value of the token and paste it in your .env file.
+
+4. Environment Variables:
+
+   Create a `.env` file in root directory and add your Hugging Face token as:
+   ```bash
+   VITE_HUGGING_FACE_TOKEN="your_hugging_face_token"
+   ```
+
+5. Run the Development Server:
 
    ```bash
    npm run dev
    ```
 
-4. Open your browser and go to http://localhost:5173
+6. Open your browser and go to http://localhost:5173
 
 ## 🤖 Inspiration
 
