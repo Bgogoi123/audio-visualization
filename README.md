@@ -1,6 +1,6 @@
 # 🎧 Spectranaut
 
-**Spectranaut** is an interactive audio visualization tool that transforms any audio file into a live spectrogram. With a variety of color themes and support for local file uploads, Spectranaut brings sound to life—visually.
+**Spectranaut** is an interactive audio visualization tool that transforms any audio file into a live spectrogram. With a variety of color themes and support for local file uploads, Spectranaut brings sound to life "visually".
 
 ## 🎙️ What’s New?
 
